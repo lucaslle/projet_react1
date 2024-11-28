@@ -1,11 +1,15 @@
-import React from 'react';
+import * as React from 'react'
+import {ChakraProvider, Box, Text} from '@chakra-ui/react';
+import Sidebar from './component/sidebar';
 
 function App() {
     return (
-        <div>
-            <h1>Bienvenue dans React !</h1>
-        </div>
-    );
+        <ChakraProvider>
+            <Box bg="blue.500">
+                <Sidebar />
+            </Box>
+        </ChakraProvider>
+    )
 }
 
 export default App;
