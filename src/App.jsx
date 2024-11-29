@@ -1,11 +1,12 @@
 import * as React from 'react'
 import {ChakraProvider, Box, Text} from '@chakra-ui/react';
 import Sidebar from './component/sidebar';
+import theme from './theme';
 
 function App() {
     return (
-        <ChakraProvider>
-            <Box bg="blue.500">
+        <ChakraProvider theme={theme}>
+            <Box>
                 <Sidebar />
             </Box>
         </ChakraProvider>
