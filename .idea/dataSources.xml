@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:sqlite:C:\Users\l.guerra--rago\WebstormProjects\react_project_junior\back\stock.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="stock [2]" uuid="91d4febb-06fc-46c9-989c-3fb8916aaf80">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:C:\Users\jmcri\OneDrive\Documents\projet_react1\back\stock.db</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

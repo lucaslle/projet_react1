@@ -12,7 +12,7 @@ function Header({ onSearch }) {
     };
 
     return (
-        <Box bg="black" p={4} boxShadow="lg" borderRadius="lg" marginBottom={10} >
+        <Box bg="black" p={4} boxShadow="lg" borderRadius="lg" marginBottom={10}  w={'100%'}>
             <InputGroup>
                 <InputLeftElement pointerEvents="none">
                     <Icon as={SearchIcon} color="gray.500" />
