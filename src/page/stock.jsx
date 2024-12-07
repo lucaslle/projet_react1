@@ -1,21 +1,14 @@
 import React, { useState, useEffect } from "react";
 import {
-    Button,
     Container,
-    Table,
-    Thead,
-    Tbody,
-    Tr,
-    Th,
-    Td,
     useDisclosure,
-    IconButton,
     useToast,
     Flex,
 } from "@chakra-ui/react";
-import { AddIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import Header from "../component/header";
 import ModalObj from "../component/modal";
+import BoutonAdd from "../component/boutonAdd";
+import ProductsTable from "../component/productsTable";
 
 const ProductManagement = () => {
     const [products, setProducts] = useState([]);
@@ -44,7 +37,6 @@ const ProductManagement = () => {
                 });
 
                 if (!response.ok) {
-                    // Log détaillé de l'erreur
                     const errorText = await response.text();
                     console.error('Détails de lerreur:', errorText);
                     throw new Error('Erreur réseau lors de la récupération des produits');
@@ -178,78 +170,14 @@ const ProductManagement = () => {
         <Container maxW="container.xl" py={5} ml={'20%'} mr={'5%'}>
             <Header searchQuery={searchQuery} onSearch={handleSearch} w={'25%'}/>
 
-            <Flex justifyContent="flex-end" mb={5}>
-                <Button
-                    leftIcon={<AddIcon />}
-                    background="black"
-                    color="white"
-                    border="none"
-                    onClick={handleAdd}
-                    boxShadow="lg"
-                    _hover={{
-                        transform: "scale(1.05)",
-                        boxShadow: "lg",
-                    }}
-                    size="lg"
-                    borderRadius="md"
-                >
-                    Ajouter un produit
-                </Button>
+            <Flex justifyContent="flex-start" mb={5} marginBottom={10}>
+                <BoutonAdd onAdd={handleAdd} />
             </Flex>
-
-            <Table variant="simple">
-                <Thead>
-                    <Tr>
-                        <Th fontSize="xl">Nom</Th>
-                        <Th isNumeric fontSize="xl">Quantité</Th>
-                        <Th isNumeric fontSize="xl">Prix</Th>
-                        <Th fontSize="xl">Date de création</Th>
-                        <Th fontSize="xl">Dernière mise à jour</Th>
-                        <Th fontSize="xl">Actions</Th>
-                    </Tr>
-                </Thead>
-                <Tbody>
-                    {filteredProducts.map((product) => (
-                        <Tr key={product.id}>
-                            <Td>{product.name}</Td>
-                            <Td isNumeric>{product.quantity}</Td>
-                            <Td isNumeric>{product.price}€</Td>
-                            <Td>{new Date(product.created_at).toLocaleDateString()}</Td>
-                            <Td>{new Date(product.updated_at).toLocaleDateString()}</Td>
-                            <Td>
-                                <IconButton
-                                    aria-label="Edit"
-                                    icon={<EditIcon />}
-                                    mr={2}
-                                    onClick={() => handleEdit(product)}
-                                    background="black"
-                                    color="white"
-                                    _hover={{
-                                        transform: "scale(1.05)",
-                                        boxShadow: "lg",
-                                    }}
-                                    size="md" // change after
-                                    borderRadius="md"
-                                />
-                                <IconButton
-                                    aria-label="Delete"
-                                    icon={<DeleteIcon />}
-                                    onClick={() => handleDelete(product.id)}
-                                    background="black"
-                                    color="white"
-                                    _hover={{
-                                        transform: "scale(1.05)",
-                                        boxShadow: "lg",
-                                    }}
-                                    size="md" // change after
-                                    borderRadius="md"
-
-                                />
-                            </Td>
-                        </Tr>
-                    ))}
-                </Tbody>
-            </Table>
+            <ProductsTable
+                products={filteredProducts}
+                handleEdit={handleEdit}
+                handleDelete={handleDelete}
+            />
 
             <ModalObj
                 isOpen={isOpen}
