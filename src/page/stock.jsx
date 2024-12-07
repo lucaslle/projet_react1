@@ -33,26 +33,39 @@ const ProductManagement = () => {
     const [searchQuery, setSearchQuery] = useState("");
 
     useEffect(() => {
-        const mockProducts = [
-            {
-                id: 1,
-                name: "zololol",
-                quantity: 10,
-                price: 99.99,
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-            },
-            {
-                id: 2,
-                name: "bloblob",
-                quantity: 5,
-                price: 49.99,
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-            },
-        ];
-        setProducts(mockProducts);
-        setFilteredProducts(mockProducts);
+        const fetchProducts = async () => {
+            try {
+                const response = await fetch('http://localhost:3000/products', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include'
+                });
+
+                if (!response.ok) {
+                    // Log détaillé de l'erreur
+                    const errorText = await response.text();
+                    console.error('Détails de lerreur:', errorText);
+                    throw new Error('Erreur réseau lors de la récupération des produits');
+                }
+
+                const data = await response.json();
+                setProducts(data);
+                setFilteredProducts(data);
+            } catch (error) {
+                console.error('Erreur complète:', error);
+                toast({
+                    title: 'Erreur lors de la récupération des produits',
+                    description: error.message,
+                    status: 'error',
+                    duration: 5000,
+                    isClosable: true,
+                });
+            }
+        };
+
+        fetchProducts();
     }, []);
 
     const handleSearch = (query) => {
@@ -87,53 +100,83 @@ const ProductManagement = () => {
         onOpen();
     };
 
-    const handleDelete = (id) => {
-        const updatedProducts = products.filter((p) => p.id !== id);
-        setProducts(updatedProducts);
-        setFilteredProducts(updatedProducts);
-        toast({
-            title: "Produit supprimé",
-            status: "success",
-            duration: 3000,
-        });
-    };
-
-    const handleSubmit = () => {
-        if (currentProduct) {
-            const updatedProducts = products.map((p) =>
-                p.id === currentProduct.id
-                    ? { ...currentProduct, ...formData, updated_at: new Date().toISOString() }
-                    : p
-            );
+    const handleDelete = async (id) => {
+        try {
+            await fetch(`http://localhost:3000/products/${id}`, { method: 'DELETE' });
+            const updatedProducts = products.filter((p) => p.id !== id);
             setProducts(updatedProducts);
             setFilteredProducts(updatedProducts);
             toast({
-                title: "Produit mis à jour",
-                status: "success",
+                title: 'Produit supprimé',
+                status: 'success',
                 duration: 3000,
             });
-        } else {
-            const newProduct = {
-                id: products.length + 1,
-                ...formData,
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-            };
-            const updatedProducts = [...products, newProduct];
-            setProducts(updatedProducts);
-            setFilteredProducts(updatedProducts);
+        } catch (error) {
             toast({
-                title: "Produit ajouté",
-                status: "success",
-                duration: 3000,
+                title: 'Erreur lors de la suppression',
+                description: error.message,
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
             });
         }
-        onClose();
     };
 
+    const handleSubmit = async () => {
+        try {
+            if (currentProduct) {
+                const updatedProducts = products.map((p) =>
+                    p.id === currentProduct.id
+                        ? { ...currentProduct, ...formData, updated_at: new Date().toISOString() }
+                        : p
+                );
+                setProducts(updatedProducts);
+                setFilteredProducts(updatedProducts);
+                toast({
+                    title: "Produit mis à jour",
+                    status: "success",
+                    duration: 3000,
+                });
+            } else {
+                const response = await fetch('http://localhost:3000/products', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erreur lors de l\'ajout du produit');
+                }
+
+                const newProduct = await response.json();
+                const updatedProducts = [...products, newProduct];
+                setProducts(updatedProducts);
+                setFilteredProducts(updatedProducts);
+
+                toast({
+                    title: "Produit ajouté avec succès",
+                    status: "success",
+                    duration: 3000,
+                });
+            }
+            onClose();
+        } catch (error) {
+            toast({
+                title: 'Erreur',
+                description: error.message,
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            });
+        }
+    };
+
+
     return (
-        <Container maxW="container.xl" py={5}>
-            <Header searchQuery={searchQuery} onSearch={handleSearch} />
+        <Container maxW="container.xl" py={5} ml={'20%'} mr={'5%'}>
+            <Header searchQuery={searchQuery} onSearch={handleSearch} w={'25%'}/>
 
             <Flex justifyContent="flex-end" mb={5}>
                 <Button

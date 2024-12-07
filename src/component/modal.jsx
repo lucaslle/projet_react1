@@ -57,7 +57,14 @@ function ModalObj({
                     </FormControl>
                 </ModalBody>
                 <ModalFooter>
-                    <Button colorScheme="blue" mr={3} onClick={handleSubmit}>
+                    <Button bg={'black'}
+                            color={'white'}
+                            mr={3}
+                            _hover={{
+                                transform: "scale(1.05)",
+                                boxShadow: "lg",
+                            }}
+                            onClick={handleSubmit}>
                         {currentProduct ? "Modifier" : "Ajouter"}
                     </Button>
                     <Button onClick={onClose}>Annuler</Button>
