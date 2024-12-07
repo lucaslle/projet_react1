@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
     Table,
     Thead,
@@ -14,8 +14,12 @@ import {
     ModalBody,
     ModalCloseButton,
     Button,
-    useDisclosure
+    useDisclosure,
+    Flex,
+    Box,
+    Icon
 } from "@chakra-ui/react";
+import { ChevronUpIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import BoutonDelete from "./boutonDelete";
 import BoutonEdit from "./boutonEdit";
 import BoutonView from "./boutonView";
@@ -23,6 +27,7 @@ import BoutonView from "./boutonView";
 const ProductsTable = ({ products, handleEdit, handleDelete }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [selectedProduct, setSelectedProduct] = useState(null);
+    const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
 
     const formatDateTime = (dateString) => {
         const options = {
@@ -41,21 +46,71 @@ const ProductsTable = ({ products, handleEdit, handleDelete }) => {
         onOpen();
     };
 
+    const handleSort = (key) => {
+        setSortConfig(prevConfig => {
+            // If sorting the same column, toggle direction
+            if (prevConfig.key === key) {
+                if (prevConfig.direction === null) return { key, direction: 'asc' };
+                if (prevConfig.direction === 'asc') return { key, direction: 'desc' };
+                if (prevConfig.direction === 'desc') return { key: null, direction: null };
+            }
+            // If sorting a new column, start with ascending
+            return { key, direction: 'asc' };
+        });
+    };
+
+    const sortedProducts = useMemo(() => {
+        if (!sortConfig.key) return products;
+
+        return [...products].sort((a, b) => {
+            if (a[sortConfig.key] < b[sortConfig.key]) {
+                return sortConfig.direction === 'asc' ? -1 : 1;
+            }
+            if (a[sortConfig.key] > b[sortConfig.key]) {
+                return sortConfig.direction === 'asc' ? 1 : -1;
+            }
+            return 0;
+        });
+    }, [products, sortConfig]);
+
+    const SortableHeader = ({ children, sortKey }) => (
+        <Th
+            fontSize="xl"
+            onClick={() => handleSort(sortKey)}
+            cursor="pointer"
+            userSelect="none"
+            position="relative"
+        >
+            <Flex alignItems="center">
+                {children}
+                <Box ml={2} position="absolute" right={0}>
+                    {sortConfig.key === sortKey && (
+                        sortConfig.direction === 'asc' ? (
+                            <Icon as={ChevronUpIcon} color="blue.500" w={5} h={5} />
+                        ) : (
+                            <Icon as={ChevronDownIcon} color="blue.500" w={5} h={5} />
+                        )
+                    )}
+                </Box>
+            </Flex>
+        </Th>
+    );
+
     return (
         <>
             <Table variant="simple">
                 <Thead>
                     <Tr>
-                        <Th fontSize="xl">Nom</Th>
-                        <Th isNumeric fontSize="xl">Quantité</Th>
-                        <Th isNumeric fontSize="xl">Prix</Th>
-                        <Th fontSize="xl">Date de création</Th>
-                        <Th fontSize="xl">Dernière mise à jour</Th>
+                        <SortableHeader sortKey="name">Nom</SortableHeader>
+                        <SortableHeader sortKey="quantity">Quantité</SortableHeader>
+                        <SortableHeader sortKey="price">Prix</SortableHeader>
+                        <SortableHeader sortKey="created_at">Date de création</SortableHeader>
+                        <SortableHeader sortKey="updated_at">Dernière mise à jour</SortableHeader>
                         <Th fontSize="xl">Actions</Th>
                     </Tr>
                 </Thead>
                 <Tbody>
-                    {products.map((product) => (
+                    {sortedProducts.map((product) => (
                         <Tr
                             key={product.id}
                             onClick={() => handleRowClick(product)}
@@ -90,12 +145,7 @@ const ProductsTable = ({ products, handleEdit, handleDelete }) => {
                             <p><strong>Dernière mise à jour:</strong> {formatDateTime(selectedProduct.updated_at)}</p>
                         </ModalBody>
                         <ModalFooter>
-                            <Button color={"white"} mr={3} onClick={onClose} bg={"black"}
-                                    _hover={{
-                                        transform: "scale(1.05)",
-                                        boxShadow: "lg",
-                                    }}
-                            >
+                            <Button colorScheme="blue" mr={3} onClick={onClose}>
                                 Fermer
                             </Button>
                         </ModalFooter>
