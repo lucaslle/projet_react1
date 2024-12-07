@@ -10,6 +10,7 @@ function App() {
     return (
         <ChakraProvider theme={theme}>
             <Router>
+
                 <Sidebar />
                 <div style={{ width: '100%' }}>
                     <Routes>
