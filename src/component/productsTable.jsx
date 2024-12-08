@@ -22,7 +22,6 @@ import {
 import { ChevronUpIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import BoutonDelete from "./boutonDelete";
 import BoutonEdit from "./boutonEdit";
-import BoutonView from "./boutonView";
 
 const ProductsTable = ({ products, handleEdit, handleDelete }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -48,13 +47,12 @@ const ProductsTable = ({ products, handleEdit, handleDelete }) => {
 
     const handleSort = (key) => {
         setSortConfig(prevConfig => {
-            // If sorting the same column, toggle direction
             if (prevConfig.key === key) {
                 if (prevConfig.direction === null) return { key, direction: 'asc' };
                 if (prevConfig.direction === 'asc') return { key, direction: 'desc' };
                 if (prevConfig.direction === 'desc') return { key: null, direction: null };
             }
-            // If sorting a new column, start with ascending
+
             return { key, direction: 'asc' };
         });
     };
@@ -114,7 +112,7 @@ const ProductsTable = ({ products, handleEdit, handleDelete }) => {
                         <Tr
                             key={product.id}
                             onClick={() => handleRowClick(product)}
-                            _hover={{ backgroundColor: 'gray.100', cursor: 'pointer' }}
+                            _hover={{ backgroundColor: 'whitesmoke', cursor: 'pointer' }}
                         >
                             <Td>{product.name}</Td>
                             <Td isNumeric>{product.quantity}</Td>
@@ -124,7 +122,6 @@ const ProductsTable = ({ products, handleEdit, handleDelete }) => {
                             <Td onClick={(e) => e.stopPropagation()}>
                                 <BoutonEdit onEdit={() => handleEdit(product)} />
                                 <BoutonDelete onDelete={() => handleDelete(product.id)} />
-                                <BoutonView />
                             </Td>
                         </Tr>
                     ))}
@@ -145,7 +142,14 @@ const ProductsTable = ({ products, handleEdit, handleDelete }) => {
                             <p><strong>Dernière mise à jour:</strong> {formatDateTime(selectedProduct.updated_at)}</p>
                         </ModalBody>
                         <ModalFooter>
-                            <Button colorScheme="blue" mr={3} onClick={onClose}>
+                            <Button
+                                color={"white"}
+                                bg={'black'}
+                                mr={3} onClick={onClose}
+                                _hover={{
+                                    transform: "scale(1.05)",
+                                    boxShadow: "lg",
+                                    }}>
                                 Fermer
                             </Button>
                         </ModalFooter>

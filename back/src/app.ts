@@ -10,7 +10,7 @@ const buildApp = async (): Promise<FastifyInstance> => {
 
 
 	await app.register(cors, {
-		origin: ['http://localhost:3002'], // Spécifiez explicitement l'origine de votre frontend
+		origin: ['http://localhost:3001' , "http://localhost:3002"],
 		methods: ['GET', 'POST', 'PUT', 'DELETE'],
 		allowedHeaders: ['Content-Type', 'Authorization'],
 		credentials: true
