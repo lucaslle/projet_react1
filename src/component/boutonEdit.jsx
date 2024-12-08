@@ -1,10 +1,11 @@
-import {EditIcon} from "@chakra-ui/icons";
+import {EditIcon, Tooltip} from "@chakra-ui/icons";
 import {IconButton} from "@chakra-ui/react";
 import React from "react";
 
 function BoutonEdit({ onEdit }){
 
     return (
+        <Tooltip label={'Modifier'}>
             <IconButton
                 aria-label="Edit"
                 icon={<EditIcon />}
@@ -16,9 +17,12 @@ function BoutonEdit({ onEdit }){
                     transform: "scale(1.05)",
                     boxShadow: "lg",
                 }}
+
+
                 size="md" // change after
                 borderRadius="md"
             />
+        </Tooltip>
         );
 }
 

@@ -25,48 +25,59 @@ const ProductManagement = () => {
 
     const [searchQuery, setSearchQuery] = useState("");
 
-    useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                const response = await fetch('http://localhost:3000/products', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: 'include'
-                });
+    const updateFilteredProducts = (updatedProducts) => {
+        setFilteredProducts(
+            updatedProducts.filter((product) =>
+                product.name?.toLowerCase().includes(searchQuery.toLowerCase())
+            )
+        );
+    };
 
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('Détails de lerreur:', errorText);
-                    throw new Error('Erreur réseau lors de la récupération des produits');
-                }
+    const fetchProducts = async () => {
+        try {
+            const response = await fetch('http://localhost:3000/products', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include'
+            });
 
-                const data = await response.json();
-                setProducts(data);
-                setFilteredProducts(data);
-            } catch (error) {
-                console.error('Erreur complète:', error);
-                toast({
-                    title: 'Erreur lors de la récupération des produits',
-                    description: error.message,
-                    status: 'error',
-                    duration: 5000,
-                    isClosable: true,
-                });
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Détails de l\'erreur:', errorText);
+                throw new Error('Erreur réseau lors de la récupération des produits');
             }
-        };
 
+            const data = await response.json();
+            setProducts(data);
+            setFilteredProducts(data);
+        } catch (error) {
+            console.error('Erreur complète:', error);
+            toast({
+                title: 'Erreur lors de la récupération des produits',
+                description: error.message,
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            });
+        }
+    };
+
+    // Fetch initial des produits
+    useEffect(() => {
         fetchProducts();
     }, []);
 
+    // Mise à jour de la recherche
     const handleSearch = (query) => {
         setSearchQuery(query.toLowerCase());
         const filtered = products.filter((product) =>
-            product.name.toLowerCase().includes(query.toLowerCase())
+            product.name?.toLowerCase().includes(query.toLowerCase())
         );
         setFilteredProducts(filtered);
     };
+
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -97,7 +108,7 @@ const ProductManagement = () => {
             await fetch(`http://localhost:3000/products/${id}`, { method: 'DELETE' });
             const updatedProducts = products.filter((p) => p.id !== id);
             setProducts(updatedProducts);
-            setFilteredProducts(updatedProducts);
+            updateFilteredProducts(updatedProducts);
             toast({
                 title: 'Produit supprimé',
                 status: 'success',
@@ -114,18 +125,28 @@ const ProductManagement = () => {
         }
     };
 
+    console.log(products);
+
     const handleSubmit = async () => {
         try {
             if (currentProduct) {
-                const updatedProducts = products.map((p) =>
-                    p.id === currentProduct.id
-                        ? { ...currentProduct, ...formData, updated_at: new Date().toISOString() }
-                        : p
-                );
-                setProducts(updatedProducts);
-                setFilteredProducts(updatedProducts);
+                const response = await fetch(`http://localhost:3000/products/${currentProduct.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erreur lors de la mise à jour du produit');
+                }
+
+                // Si l'API ne renvoie pas directement le produit mis à jour, on rafraîchit les données
+                await fetchProducts();
+
                 toast({
-                    title: "Produit mis à jour",
+                    title: "Produit mis à jour avec succès",
                     status: "success",
                     duration: 3000,
                 });
@@ -142,10 +163,8 @@ const ProductManagement = () => {
                     throw new Error('Erreur lors de l\'ajout du produit');
                 }
 
-                const newProduct = await response.json();
-                const updatedProducts = [...products, newProduct];
-                setProducts(updatedProducts);
-                setFilteredProducts(updatedProducts);
+                // Rafraîchir les produits après l'ajout
+                await fetchProducts();
 
                 toast({
                     title: "Produit ajouté avec succès",
@@ -166,9 +185,10 @@ const ProductManagement = () => {
     };
 
 
+
     return (
         <Container maxW="container.xl" py={5} ml={'20%'} mr={'5%'}>
-            <Header searchQuery={searchQuery} onSearch={handleSearch} w={'25%'}/>
+            <Header searchQuery={searchQuery} onSearch={handleSearch} w={'25%'} />
 
             <Flex justifyContent="flex-start" mb={5} marginBottom={10}>
                 <BoutonAdd onAdd={handleAdd} />
