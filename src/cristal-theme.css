@@ -1,0 +1,11 @@
+:root {
+    --cr-color-primary: #000000;
+    --cr-color-primary-hover: #333333;
+    --cr-color-primary-subtle: #e2e8f0;
+    --cr-color-primary-subtle-hover: #cbd5e0;
+    --cr-color-focus: #000000;
+}
+
+.search-field::part(label) {
+    color: #ffffff;
+}

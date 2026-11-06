@@ -6,14 +6,6 @@ import {
     Tr,
     Th,
     Td,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalFooter,
-    ModalBody,
-    ModalCloseButton,
-    Button,
     useDisclosure,
     Flex,
     Box,
@@ -22,6 +14,7 @@ import {
 import { ChevronUpIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import BoutonDelete from "./boutonDelete";
 import BoutonEdit from "./boutonEdit";
+import { CrButton, CrDrawer } from "@cristal/react";
 
 const ProductsTable = ({ products, handleEdit, handleDelete }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -128,34 +121,23 @@ const ProductsTable = ({ products, handleEdit, handleDelete }) => {
                 </Tbody>
             </Table>
 
-            {selectedProduct && (
-                <Modal isOpen={isOpen} onClose={onClose}>
-                    <ModalOverlay />
-                    <ModalContent>
-                        <ModalHeader>Détails du Produit</ModalHeader>
-                        <ModalCloseButton />
-                        <ModalBody>
-                            <p><strong>Nom:</strong> {selectedProduct.name}</p>
-                            <p><strong>Quantité:</strong> {selectedProduct.quantity}</p>
-                            <p><strong>Prix:</strong> {selectedProduct.price}€</p>
-                            <p><strong>Date de création:</strong> {formatDateTime(selectedProduct.created_at)}</p>
-                            <p><strong>Dernière mise à jour:</strong> {formatDateTime(selectedProduct.updated_at)}</p>
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button
-                                color={"white"}
-                                bg={'black'}
-                                mr={3} onClick={onClose}
-                                _hover={{
-                                    transform: "scale(1.05)",
-                                    boxShadow: "lg",
-                                    }}>
-                                Fermer
-                            </Button>
-                        </ModalFooter>
-                    </ModalContent>
-                </Modal>
-            )}
+            <CrDrawer label="Détails du produit" open={isOpen} onCrClose={onClose}>
+                {selectedProduct && (
+                    <dl>
+                        <dt><strong>Nom</strong></dt>
+                        <dd>{selectedProduct.name}</dd>
+                        <dt><strong>Quantité</strong></dt>
+                        <dd>{selectedProduct.quantity}</dd>
+                        <dt><strong>Prix</strong></dt>
+                        <dd>{selectedProduct.price}€</dd>
+                        <dt><strong>Date de création</strong></dt>
+                        <dd>{formatDateTime(selectedProduct.created_at)}</dd>
+                        <dt><strong>Dernière mise à jour</strong></dt>
+                        <dd>{formatDateTime(selectedProduct.updated_at)}</dd>
+                    </dl>
+                )}
+                <CrButton slot="footer" onClick={onClose}>Fermer</CrButton>
+            </CrDrawer>
         </>
     );
 };

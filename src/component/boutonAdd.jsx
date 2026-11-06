@@ -1,26 +1,14 @@
-import {Button} from "@chakra-ui/react";
 import {AddIcon} from "@chakra-ui/icons";
+import {CrButton} from "@cristal/react";
 import React from "react";
 
 function BoutonAdd({ onAdd }){
 
     return (
-        <Button
-            leftIcon={<AddIcon />}
-            background="black"
-            color="white"
-            border="none"
-            onClick={onAdd}
-            boxShadow="lg"
-            _hover={{
-                transform: "scale(1.05)",
-                boxShadow: "lg",
-            }}
-            size="lg"
-            borderRadius="md"
-        >
+        <CrButton size="l" onClick={onAdd}>
+            <AddIcon slot="start" />
             Ajouter un produit
-        </Button>
+        </CrButton>
     );
 }
 
