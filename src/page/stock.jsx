@@ -9,6 +9,8 @@ import Header from "../component/header";
 import ModalObj from "../component/modal";
 import BoutonAdd from "../component/boutonAdd";
 import ProductsTable from "../component/productsTable";
+import StockSummary from "../component/stockSummary";
+import StockFilters, { PRICE_RANGES } from "../component/stockFilters";
 
 const ProductManagement = () => {
     const [products, setProducts] = useState([]);
@@ -24,6 +26,12 @@ const ProductManagement = () => {
     });
 
     const [searchQuery, setSearchQuery] = useState("");
+    const [inStockOnly, setInStockOnly] = useState(false);
+    const [priceRange, setPriceRange] = useState("all");
+
+    const visibleProducts = filteredProducts.filter((product) =>
+        (!inStockOnly || product.quantity > 0) && PRICE_RANGES[priceRange](product.price)
+    );
 
     const updateFilteredProducts = (updatedProducts) => {
         setFilteredProducts(
@@ -190,11 +198,19 @@ const ProductManagement = () => {
         <Container maxW="container.xl" py={5} ml={'20%'} mr={'5%'}>
             <Header searchQuery={searchQuery} onSearch={handleSearch} w={'25%'} />
 
+            <StockSummary products={products} />
+
             <Flex justifyContent="flex-start" mb={5} marginBottom={10}>
                 <BoutonAdd onAdd={handleAdd} />
             </Flex>
+            <StockFilters
+                inStockOnly={inStockOnly}
+                onInStockChange={setInStockOnly}
+                priceRange={priceRange}
+                onPriceRangeChange={setPriceRange}
+            />
             <ProductsTable
-                products={filteredProducts}
+                products={visibleProducts}
                 handleEdit={handleEdit}
                 handleDelete={handleDelete}
             />
