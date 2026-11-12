@@ -2,9 +2,7 @@
   "dependencies": {
     "@chakra-ui/icons": "^2.2.4",
     "@chakra-ui/react": "^2.10.4",
-    "@cristal/core": "file:vendor/cristal/cristal-core-0.0.0.tgz",
     "@cristal/react": "file:vendor/cristal/cristal-react-0.0.0.tgz",
-    "@cristal/tokens": "file:vendor/cristal/cristal-tokens-0.0.0.tgz",
     "@emotion/react": "^11.13.5",
     "@emotion/styled": "^11.13.5",
     "@fastify/cors": "^10.0.1",
@@ -43,6 +41,8 @@
       "http-errors": {
         "setprototypeof": "1.1.1"
       }
-    }
+    },
+    "@cristal/core": "file:vendor/cristal/cristal-core-0.0.0.tgz",
+    "@cristal/tokens": "file:vendor/cristal/cristal-tokens-0.0.0.tgz"
   }
 }
