@@ -1,229 +1,145 @@
-import React, { useState, useEffect } from "react";
-import {
-    Container,
-    useDisclosure,
-    useToast,
-    Flex,
-} from "@chakra-ui/react";
-import Header from "../component/header";
+import React, { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { CrButton, CrEmptyState, CrIconButton, CrSearch, CrSegmented, CrSkeleton } from "@cristal/react";
+import { RefreshCw } from "lucide-react";
 import ModalObj from "../component/modal";
 import BoutonAdd from "../component/boutonAdd";
 import ProductsTable from "../component/productsTable";
 import StockSummary from "../component/stockSummary";
 import StockFilters, { PRICE_RANGES } from "../component/stockFilters";
+import ReorderDialog from "../component/reorderDialog";
+import { useProducts } from "../layout/products";
+import { useSettings } from "../layout/settings";
+import { useProductCrud } from "../layout/useProductCrud";
+
+const empty = { name: "", quantity: 0, price: 0 };
+
+const LEVELS = {
+    all: () => true,
+    ok: (product, low) => product.quantity >= low,
+    low: (product, low) => product.quantity > 0 && product.quantity < low,
+    out: (product) => product.quantity === 0,
+};
 
 const ProductManagement = () => {
-    const [products, setProducts] = useState([]);
-    const [filteredProducts, setFilteredProducts] = useState([]);
-    const [currentProduct, setCurrentProduct] = useState(null);
-    const { isOpen, onOpen, onClose } = useDisclosure();
-    const toast = useToast();
-
-    const [formData, setFormData] = useState({
-        name: "",
-        quantity: 0,
-        price: 0,
-    });
-
-    const [searchQuery, setSearchQuery] = useState("");
+    const { products, loading, refresh } = useProducts();
+    const { settings } = useSettings();
+    const { save, remove, reorder } = useProductCrud();
+    const [params, setParams] = useSearchParams();
+    const [current, setCurrent] = useState(null);
+    const [editing, setEditing] = useState(false);
+    const [formData, setFormData] = useState(empty);
+    const [level, setLevel] = useState("all");
     const [inStockOnly, setInStockOnly] = useState(false);
     const [priceRange, setPriceRange] = useState("all");
+    const [menuAnimation, setMenuAnimation] = useState("anchor-pop");
+    const [reordering, setReordering] = useState(null);
+    const query = params.get("q") ?? "";
 
-    const visibleProducts = filteredProducts.filter((product) =>
-        (!inStockOnly || product.quantity > 0) && PRICE_RANGES[priceRange](product.price)
+    const open = (product) => {
+        setCurrent(product);
+        setFormData(product ? { name: product.name, quantity: product.quantity, price: product.price } : empty);
+        setEditing(true);
+    };
+
+    // « Ajouter un produit » depuis l'accueil ou la palette de commandes arrive avec ?nouveau=1.
+    useEffect(() => {
+        if (!params.has("nouveau")) return;
+        open(null);
+        params.delete("nouveau");
+        setParams(params, { replace: true });
+    }, [params, setParams]);
+
+    const counts = useMemo(
+        () => Object.fromEntries(Object.entries(LEVELS).map(([key, test]) => [key, products.filter((product) => test(product, settings.lowStock)).length])),
+        [products, settings.lowStock]
     );
 
-    const updateFilteredProducts = (updatedProducts) => {
-        setFilteredProducts(
-            updatedProducts.filter((product) =>
-                product.name?.toLowerCase().includes(searchQuery.toLowerCase())
-            )
-        );
+    const visible = products.filter((product) =>
+        product.name?.toLowerCase().includes(query.toLowerCase()) &&
+        LEVELS[level](product, settings.lowStock) &&
+        (!inStockOnly || product.quantity > 0) &&
+        PRICE_RANGES[priceRange](product.price)
+    );
+
+    const setQuery = (value) => {
+        if (value) params.set("q", value);
+        else params.delete("q");
+        setParams(params, { replace: true });
     };
 
-    const fetchProducts = async () => {
-        try {
-            const response = await fetch('http://localhost:3000/products', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include'
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                console.error('Détails de l\'erreur:', errorText);
-                throw new Error('Erreur réseau lors de la récupération des produits');
-            }
-
-            const data = await response.json();
-            setProducts(data);
-            setFilteredProducts(data);
-        } catch (error) {
-            console.error('Erreur complète:', error);
-            toast({
-                title: 'Erreur lors de la récupération des produits',
-                description: error.message,
-                status: 'error',
-                duration: 5000,
-                isClosable: true,
-            });
-        }
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        setFormData((previous) => ({ ...previous, [name]: name === "quantity" || name === "price" ? Number(value) : value }));
     };
 
-    // Fetch initial des produits
-    useEffect(() => {
-        fetchProducts();
-    }, []);
-
-    // Mise à jour de la recherche
-    const handleSearch = (query) => {
-        setSearchQuery(query.toLowerCase());
-        const filtered = products.filter((product) =>
-            product.name?.toLowerCase().includes(query.toLowerCase())
-        );
-        setFilteredProducts(filtered);
+    const clearFilters = () => {
+        setQuery("");
+        setLevel("all");
+        setInStockOnly(false);
+        setPriceRange("all");
     };
-
-
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({
-            ...prev,
-            [name]: name === "quantity" || name === "price" ? Number(value) : value,
-        }));
-    };
-
-    const handleAdd = () => {
-        setCurrentProduct(null);
-        setFormData({ name: "", quantity: 0, price: 0 });
-        onOpen();
-    };
-
-    const handleEdit = (product) => {
-        setCurrentProduct(product);
-        setFormData({
-            name: product.name,
-            quantity: product.quantity,
-            price: product.price,
-        });
-        onOpen();
-    };
-
-    const handleDelete = async (id) => {
-        try {
-            await fetch(`http://localhost:3000/products/${id}`, { method: 'DELETE' });
-            const updatedProducts = products.filter((p) => p.id !== id);
-            setProducts(updatedProducts);
-            updateFilteredProducts(updatedProducts);
-            toast({
-                title: 'Produit supprimé',
-                status: 'success',
-                duration: 3000,
-            });
-        } catch (error) {
-            toast({
-                title: 'Erreur lors de la suppression',
-                description: error.message,
-                status: 'error',
-                duration: 5000,
-                isClosable: true,
-            });
-        }
-    };
-
-    console.log(products);
-
-    const handleSubmit = async () => {
-        try {
-            if (currentProduct) {
-                const response = await fetch(`http://localhost:3000/products/${currentProduct.id}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formData),
-                });
-
-                if (!response.ok) {
-                    throw new Error('Erreur lors de la mise à jour du produit');
-                }
-
-                // Si l'API ne renvoie pas directement le produit mis à jour, on rafraîchit les données
-                await fetchProducts();
-
-                toast({
-                    title: "Produit mis à jour avec succès",
-                    status: "success",
-                    duration: 3000,
-                });
-            } else {
-                const response = await fetch('http://localhost:3000/products', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formData),
-                });
-
-                if (!response.ok) {
-                    throw new Error('Erreur lors de l\'ajout du produit');
-                }
-
-                // Rafraîchir les produits après l'ajout
-                await fetchProducts();
-
-                toast({
-                    title: "Produit ajouté avec succès",
-                    status: "success",
-                    duration: 3000,
-                });
-            }
-            onClose();
-        } catch (error) {
-            toast({
-                title: 'Erreur',
-                description: error.message,
-                status: 'error',
-                duration: 5000,
-                isClosable: true,
-            });
-        }
-    };
-
-
 
     return (
-        <Container maxW="container.xl" py={5} ml={'20%'} mr={'5%'}>
-            <Header searchQuery={searchQuery} onSearch={handleSearch} w={'25%'} />
+        <>
+            <div className="page-head">
+                <div>
+                    <h1>Stock</h1>
+                    <p>{products.length} produits suivis, seuil d’alerte à {settings.lowStock} unités.</p>
+                </div>
+                <div className="toolbar">
+                    <CrSearch label="Rechercher un produit" value={query} placeholder="Nom du produit…" recent={["Écran", "Câble"]} noResults={!!query && !visible.length} onCrInput={(event) => setQuery(event.detail)} />
+                    <CrIconButton label="Actualiser" size="l" variant="outline" loading={loading} onClick={refresh}>
+                        <RefreshCw aria-hidden="true" />
+                    </CrIconButton>
+                    <BoutonAdd onAdd={() => open(null)} />
+                </div>
+            </div>
 
             <StockSummary products={products} />
 
-            <Flex justifyContent="flex-start" mb={5} marginBottom={10}>
-                <BoutonAdd onAdd={handleAdd} />
-            </Flex>
+            <CrSegmented label="Niveau de stock" value={level} onCrChange={(event) => setLevel(event.detail)} className="levels">
+                <option value="all" data-count={counts.all}>Tous</option>
+                <option value="ok" data-count={counts.ok}>Suffisant</option>
+                <option value="low" data-count={counts.low}>Faible</option>
+                <option value="out" data-count={counts.out}>Rupture</option>
+            </CrSegmented>
+
             <StockFilters
                 inStockOnly={inStockOnly}
                 onInStockChange={setInStockOnly}
                 priceRange={priceRange}
+                menuAnimation={menuAnimation}
+                onMenuAnimationChange={setMenuAnimation}
                 onPriceRangeChange={setPriceRange}
             />
-            <ProductsTable
-                products={visibleProducts}
-                handleEdit={handleEdit}
-                handleDelete={handleDelete}
-            />
+
+            {loading && !products.length ? (
+                <div aria-busy="true" className="panel skeleton-table">
+                    {[1, 2, 3, 4].map((row) => <CrSkeleton key={row} height="44px" />)}
+                    <span className="sr-only">Chargement des produits</span>
+                </div>
+            ) : visible.length ? (
+                <ProductsTable menuAnimation={menuAnimation} products={visible} handleEdit={open} handleDelete={remove} handleReorder={setReordering} compact={settings.compact} />
+            ) : (
+                <CrEmptyState heading="Aucun produit ne correspond" illustration="search" className="panel">
+                    {query ? `Rien pour « ${query} » avec ces filtres.` : "Aucun produit avec ces filtres."} Élargissez la recherche ou ajoutez le produit.
+                    <CrButton slot="actions" variant="secondary" onClick={clearFilters}>Effacer les filtres</CrButton>
+                    <CrButton slot="actions" onClick={() => open(null)}>Ajouter un produit</CrButton>
+                </CrEmptyState>
+            )}
+
+            <ReorderDialog product={reordering} onClose={() => setReordering(null)} onOrder={reorder} />
 
             <ModalObj
-                isOpen={isOpen}
-                onClose={onClose}
-                currentProduct={currentProduct}
+                isOpen={editing}
+                onClose={() => setEditing(false)}
+                currentProduct={current}
                 formData={formData}
                 handleInputChange={handleInputChange}
-                handleSubmit={handleSubmit}
+                handleSubmit={async () => (await save(formData, current)) && setEditing(false)}
             />
-        </Container>
+        </>
     );
 };
 

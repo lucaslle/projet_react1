@@ -12,11 +12,12 @@ import {
     Icon
 } from "@chakra-ui/react";
 import { ChevronUpIcon, ChevronDownIcon } from '@chakra-ui/icons';
-import BoutonDelete from "./boutonDelete";
-import BoutonEdit from "./boutonEdit";
-import { CrButton, CrDrawer } from "@cristal/react";
+import { Link } from "react-router-dom";
+import ProductActions from "./productActions";
+import { PackagePlus } from "lucide-react";
+import { CrAccordion, CrAccordionItem, CrBox, CrButton, CrDrawer, CrIconButton } from "@cristal/react";
 
-const ProductsTable = ({ products, handleEdit, handleDelete }) => {
+const ProductsTable = ({ products, handleEdit, handleDelete, handleReorder, menuAnimation, compact }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
@@ -89,7 +90,7 @@ const ProductsTable = ({ products, handleEdit, handleDelete }) => {
 
     return (
         <>
-            <Table variant="simple">
+            <Table variant="simple" size={compact ? "sm" : "md"}>
                 <Thead>
                     <Tr>
                         <SortableHeader sortKey="name">Nom</SortableHeader>
@@ -107,14 +108,24 @@ const ProductsTable = ({ products, handleEdit, handleDelete }) => {
                             onClick={() => handleRowClick(product)}
                             _hover={{ backgroundColor: 'whitesmoke', cursor: 'pointer' }}
                         >
-                            <Td>{product.name}</Td>
+                            <Td><Link to={`/stock/${product.id}`} onClick={(e) => e.stopPropagation()} className="product-link">{product.name}</Link></Td>
                             <Td isNumeric>{product.quantity}</Td>
                             <Td isNumeric>{product.price}€</Td>
                             <Td>{formatDateTime(product.created_at)}</Td>
                             <Td>{formatDateTime(product.updated_at)}</Td>
                             <Td onClick={(e) => e.stopPropagation()}>
-                                <BoutonEdit onEdit={() => handleEdit(product)} />
-                                <BoutonDelete onDelete={() => handleDelete(product.id)} />
+                                <CrBox display="flex" gap="sm" align="center">
+                                <CrIconButton label={`Réapprovisionner ${product.name}`} tooltipPlacement="start" onClick={() => handleReorder(product)}>
+                                    <PackagePlus aria-hidden="true" />
+                                </CrIconButton>
+                                <ProductActions
+                                    product={product}
+                                    animation={menuAnimation}
+                                    onView={() => handleRowClick(product)}
+                                    onEdit={() => handleEdit(product)}
+                                    onDelete={() => handleDelete(product)}
+                                />
+                                </CrBox>
                             </Td>
                         </Tr>
                     ))}
@@ -123,19 +134,28 @@ const ProductsTable = ({ products, handleEdit, handleDelete }) => {
 
             <CrDrawer label="Détails du produit" open={isOpen} onCrClose={onClose}>
                 {selectedProduct && (
-                    <dl>
-                        <dt><strong>Nom</strong></dt>
-                        <dd>{selectedProduct.name}</dd>
-                        <dt><strong>Quantité</strong></dt>
-                        <dd>{selectedProduct.quantity}</dd>
-                        <dt><strong>Prix</strong></dt>
-                        <dd>{selectedProduct.price}€</dd>
-                        <dt><strong>Date de création</strong></dt>
-                        <dd>{formatDateTime(selectedProduct.created_at)}</dd>
-                        <dt><strong>Dernière mise à jour</strong></dt>
-                        <dd>{formatDateTime(selectedProduct.updated_at)}</dd>
-                    </dl>
+                    <CrAccordion multiple animation="accent-bar">
+                        <CrAccordionItem label="Stock et prix" open>
+                            <dl>
+                                <dt><strong>Nom</strong></dt>
+                                <dd>{selectedProduct.name}</dd>
+                                <dt><strong>Quantité</strong></dt>
+                                <dd>{selectedProduct.quantity}</dd>
+                                <dt><strong>Prix</strong></dt>
+                                <dd>{selectedProduct.price}€</dd>
+                            </dl>
+                        </CrAccordionItem>
+                        <CrAccordionItem label="Historique">
+                            <dl>
+                                <dt><strong>Date de création</strong></dt>
+                                <dd>{formatDateTime(selectedProduct.created_at)}</dd>
+                                <dt><strong>Dernière mise à jour</strong></dt>
+                                <dd>{formatDateTime(selectedProduct.updated_at)}</dd>
+                            </dl>
+                        </CrAccordionItem>
+                    </CrAccordion>
                 )}
+                <CrButton slot="footer" variant="secondary" onClick={() => { onClose(); handleReorder(selectedProduct); }}>Réapprovisionner</CrButton>
                 <CrButton slot="footer" onClick={onClose}>Fermer</CrButton>
             </CrDrawer>
         </>

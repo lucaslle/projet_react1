@@ -36,5 +36,13 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "overrides": {
+    "@csstools/postcss-trigonometric-functions": "1.0.1",
+    "serve-index": {
+      "http-errors": {
+        "setprototypeof": "1.1.1"
+      }
+    }
   }
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { CrCheckbox, CrSelect } from "@cristal/react";
+import { CrBox, CrCheckbox, CrSelect } from "@cristal/react";
 
 export const PRICE_RANGES = {
     all: () => true,
@@ -8,13 +8,24 @@ export const PRICE_RANGES = {
     high: (price) => price > 50,
 };
 
-function StockFilters({ inStockOnly, onInStockChange, priceRange, onPriceRangeChange }) {
+export const MENU_ANIMATIONS = {
+    "anchor-pop": "Anchor Pop",
+    "turn-over": "Turn Over",
+    "card-deal": "Card Deal",
+    "drum-roll": "Drum Roll",
+    "outline-trace": "Outline Trace",
+    "tile-build": "Tile Build",
+    fade: "Fondu",
+};
+
+function StockFilters({ inStockOnly, onInStockChange, priceRange, onPriceRangeChange, menuAnimation, onMenuAnimationChange }) {
     return (
-        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 'var(--cr-spacing-xl)', marginBottom: 'var(--cr-spacing-xl)' }}>
+        <CrBox display="flex" align="flex-end" gap="xl" wrap style={{ marginBottom: 'var(--cr-spacing-xl)' }}>
             <CrSelect
                 label="Prix"
                 value={priceRange}
                 onCrChange={(event) => onPriceRangeChange(event.detail)}
+                animation={menuAnimation}
                 style={{ width: 240 }}
             >
                 <option value="all">Tous les prix</option>
@@ -22,12 +33,23 @@ function StockFilters({ inStockOnly, onInStockChange, priceRange, onPriceRangeCh
                 <option value="mid">De 10 à 50 €</option>
                 <option value="high">Plus de 50 €</option>
             </CrSelect>
+            <CrSelect
+                label="Animation des menus"
+                value={menuAnimation}
+                onCrChange={(event) => onMenuAnimationChange(event.detail)}
+                animation={menuAnimation}
+                style={{ width: 240 }}
+            >
+                {Object.entries(MENU_ANIMATIONS).map(([value, name]) => (
+                    <option key={value} value={value}>{name}</option>
+                ))}
+            </CrSelect>
             <CrCheckbox
                 label="En stock uniquement"
                 checked={inStockOnly}
                 onCrChange={(event) => onInStockChange(event.detail)}
             />
-        </div>
+        </CrBox>
     );
 }
 

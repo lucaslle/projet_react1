@@ -1,0 +1,106 @@
+.product-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: var(--cr-spacing-2xl);
+    margin-bottom: var(--cr-spacing-xl);
+}
+
+.product-photo {
+    aspect-ratio: 4 / 3;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 40px 80px -45px color-mix(in oklab, var(--cr-color-primary) 90%, transparent);
+}
+
+.product-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--cr-spacing-lg);
+}
+
+.product-info h1 {
+    margin: 0;
+    font-family: var(--display);
+    font-size: clamp(2rem, 4vw, 3rem);
+    letter-spacing: -0.035em;
+}
+
+.price {
+    padding: 0;
+    font-family: var(--display);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--cr-color-primary-text);
+    background: none;
+    border: 0;
+    cursor: help;
+}
+
+.price:focus-visible {
+    outline: 2px solid var(--cr-color-focus);
+    outline-offset: 4px;
+    border-radius: 6px;
+}
+
+.trend {
+    display: grid;
+    gap: var(--cr-spacing-sm);
+    width: 100%;
+    padding: var(--cr-spacing-lg);
+    background: var(--cr-color-surface);
+    border: 1px solid var(--cr-color-border);
+    border-radius: 18px;
+}
+
+.trend-spark {
+    width: 100%;
+    height: 64px;
+}
+
+.product-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--cr-spacing-sm);
+}
+
+.pager {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--cr-spacing-lg);
+}
+
+.reviews {
+    display: grid;
+    gap: var(--cr-spacing-xl);
+    margin: 0 0 var(--cr-spacing-2xl);
+    padding: 0;
+    list-style: none;
+}
+
+.reviews li {
+    display: flex;
+    gap: var(--cr-spacing-lg);
+}
+
+.reviews p {
+    margin: 6px 0 0;
+}
+
+.review-form {
+    display: grid;
+    gap: var(--cr-spacing-lg);
+    max-width: 520px;
+    padding-top: var(--cr-spacing-xl);
+    border-top: 1px solid var(--cr-color-border);
+}
+
+.review-form cr-button {
+    justify-self: start;
+}
+
+@media (max-width: 860px) {
+    .product-hero {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
