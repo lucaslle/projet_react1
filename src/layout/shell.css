@@ -1,0 +1,318 @@
+:root {
+    --ink: #0b0718;
+    --page: #f6f4fb;
+    --display: 'Sora', 'Inter', system-ui, sans-serif;
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--cr-color-text);
+    background: var(--page);
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.shell {
+    display: grid;
+    background: var(--page);
+    grid-template-columns: 264px minmax(0, 1fr);
+    min-height: 100vh;
+}
+
+.side {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+}
+
+.sidebar {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    gap: var(--cr-spacing-xl);
+    height: 100%;
+    box-sizing: border-box;
+    padding: var(--cr-spacing-xl) var(--cr-spacing-lg);
+    overflow-y: auto;
+    color: #ede9fe;
+    background: var(--ink);
+}
+
+/* Lueur de la couleur du thème : la sidebar change avec le réglage « Couleur ». */
+.sidebar::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+        radial-gradient(80% 40% at 0% 0%, color-mix(in oklab, var(--cr-color-primary) 55%, transparent), transparent 70%),
+        radial-gradient(70% 30% at 100% 100%, color-mix(in oklab, #22d3ee 22%, transparent), transparent 70%);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--display);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #fff;
+    text-decoration: none;
+}
+
+.brand em {
+    font-style: normal;
+    font-weight: 400;
+    color: #c4b5fd;
+}
+
+.nav-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: var(--cr-spacing-lg);
+}
+
+.nav-title {
+    margin: 0 0 var(--cr-spacing-xs);
+    padding-inline: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #a78bfa;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    font-weight: 500;
+    color: #ddd6fe;
+    text-decoration: none;
+    border-radius: 12px;
+    transition: background 0.2s, color 0.2s, transform 0.2s;
+}
+
+.nav-link:hover {
+    color: #fff;
+    background: rgb(255 255 255 / 0.08);
+    transform: translateX(2px);
+}
+
+.nav-link.active {
+    color: #fff;
+    background: linear-gradient(135deg, color-mix(in oklab, var(--cr-color-primary) 75%, transparent), rgb(255 255 255 / 0.06));
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.15), 0 10px 30px -12px var(--cr-color-primary);
+}
+
+.nav-link:focus-visible,
+.brand:focus-visible {
+    outline: 2px solid #f0abfc;
+    outline-offset: 2px;
+}
+
+.nav-count {
+    margin-left: auto;
+}
+
+.sidebar-foot {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cr-spacing-sm);
+    margin-top: auto;
+    padding: var(--cr-spacing-lg);
+    background: rgb(255 255 255 / 0.05);
+    border: 1px solid rgb(255 255 255 / 0.1);
+    border-radius: 16px;
+}
+
+.sidebar-foot .nav-title {
+    padding: 0;
+}
+
+/* Le libellé de la jauge passe en clair sur le fond sombre. */
+.storage {
+    --cr-color-text: #ede9fe;
+    --cr-color-text-muted: #c4b5fd;
+}
+
+.main {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: var(--cr-spacing-sm);
+    padding: 12px var(--cr-spacing-xl);
+    background: color-mix(in oklab, var(--page) 80%, transparent);
+    border-bottom: 1px solid var(--cr-color-border);
+    backdrop-filter: blur(14px);
+}
+
+.crumbs {
+    flex: 1;
+    min-width: 0;
+}
+
+.top-search {
+    width: min(320px, 30vw);
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pop {
+    display: grid;
+    gap: var(--cr-spacing-lg);
+    width: 280px;
+}
+
+.pop-list {
+    display: grid;
+    gap: var(--cr-spacing-sm);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.pop-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--cr-spacing-sm);
+}
+
+.pop a {
+    font-weight: 600;
+    color: var(--cr-color-primary-text);
+}
+
+.content {
+    padding: var(--cr-spacing-2xl) var(--cr-spacing-xl) var(--cr-spacing-3xl);
+}
+
+.shell.compact .content {
+    padding: var(--cr-spacing-lg);
+}
+
+.menu-button,
+.side-drawer {
+    display: none;
+}
+
+.side-drawer .sidebar {
+    margin: calc(-1 * var(--cr-spacing-lg));
+    min-height: 100%;
+}
+
+@media (max-width: 960px) {
+    .shell {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .side {
+        display: none;
+    }
+    .menu-button,
+    .side-drawer {
+        display: inline-flex;
+    }
+    .top-search,
+    .topbar cr-tooltip {
+        display: none;
+    }
+    .content {
+        padding: var(--cr-spacing-lg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .nav-link {
+        transition: none;
+    }
+}
+
+/* Titres de page. */
+.page-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--cr-spacing-lg);
+    margin-bottom: var(--cr-spacing-xl);
+}
+
+.page-head h1 {
+    margin: 0;
+    font-family: var(--display);
+    font-size: clamp(1.8rem, 3vw, 2.4rem);
+    letter-spacing: -0.03em;
+}
+
+.page-head p {
+    margin: 6px 0 0;
+    color: var(--cr-color-text-muted);
+}
+
+.panel {
+    padding: var(--cr-spacing-xl);
+    background: var(--cr-color-surface);
+    border: 1px solid var(--cr-color-border);
+    border-radius: 20px;
+    box-shadow: 0 20px 50px -35px color-mix(in oklab, var(--cr-color-primary) 60%, transparent);
+}
+
+.panel h2 {
+    margin: 0 0 var(--cr-spacing-lg);
+    font-family: var(--display);
+    font-size: 1.15rem;
+}
+
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: var(--cr-spacing-sm);
+}
+
+.levels {
+    display: block;
+    margin-bottom: var(--cr-spacing-lg);
+}
+
+.skeleton-table {
+    display: grid;
+    gap: var(--cr-spacing-sm);
+}
+
+.product-link {
+    font-weight: 600;
+    color: var(--cr-color-primary-text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.storage-text {
+    margin: var(--cr-spacing-sm) 0 0;
+    font-size: 13px;
+    color: #ddd6fe;
+}
