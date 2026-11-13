@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CrBackground, CrSegmented, CrSwitch } from '@cristal/react';
+import { CrBackground, CrSegmented, CrSwitch, CrThemeToggle } from '@cristal/react';
 import { COLORS, useSettings } from '../../layout/settings';
 
 const BACKGROUNDS = [['aurora', 'Aurore'], ['gradient', 'Dégradé'], ['dots', 'Points'], ['grid', 'Grille']];
@@ -22,6 +22,7 @@ export function Appearance() {
                     </label>
                 ))}
             </fieldset>
+            <CrThemeToggle variant="label" theme={settings.theme} onCrChange={(event) => update({ theme: event.detail })} />
             <CrSwitch label="Lignes compactes dans les tableaux" checked={settings.compact} onCrChange={(event) => update({ compact: event.detail })} />
             <CrSegmented label="Fond animé de l’accueil" value={background} onCrChange={(event) => setBackground(event.detail)} variant="outline" fit>
                 {BACKGROUNDS.map(([value, name]) => (

@@ -6,7 +6,8 @@ const theme = extendTheme({
         body: 'Inter, system-ui, sans-serif',
         heading: 'Sora, Inter, system-ui, sans-serif',
     },
-    styles: { global: { body: { bg: '#f6f4fb' } } },
+    // Suit le thème Cristal (clair ou sombre) au lieu des couleurs claires de Chakra.
+    styles: { global: { body: { bg: 'var(--page)', color: 'var(--cr-color-text)' } } },
 });
 
 export default theme;

@@ -1,7 +1,7 @@
 import React, { useMemo, useRef, useState } from 'react';
-import { CrBox, CrButton, CrGridLayout, CrIconButton, CrSelect, CrTable, CrGridItem } from '@cristal/react';
+import { CrBox, CrButton, CrChart, CrGridLayout, CrIconButton, CrSelect, CrTable, CrGridItem } from '@cristal/react';
 import { Download } from 'lucide-react';
-import { Bars, Columns, Feed, Kpi, euros } from '../dashboard/charts';
+import { Feed, Kpi, euros } from '../dashboard/charts';
 import { CHANNELS, ORDERS, PERIODS, groupBy, ordersOf, series, sum } from '../dashboard/fakeData';
 import '../dashboard/dashboard.css';
 
@@ -17,6 +17,14 @@ const columns = [
     { key: 'amount', label: 'Montant', width: 110, align: 'end' },
     { key: 'status', label: 'Statut', width: 130, badges: { Payée: 'success', Expédiée: 'primary', 'En attente': 'warning', Remboursée: 'danger' } },
 ];
+
+const EUROS = { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 };
+const FILL = { height: '100%' };
+
+/** Classement en barres horizontales, avec les 10 (ou limit) premières valeurs. */
+const Ranking = ({ label, items, limit = 10 }) => (
+    <CrChart label={label} hideLabel type="bar" labels={items.slice(0, limit).map((item) => item.label)} series={[{ name: 'Chiffre d\'affaires', values: items.slice(0, limit).map((item) => item.value) }]} format={EUROS} />
+);
 
 const download = (orders) => {
     const lines = [columns.map((column) => column.label), ...orders.map((order) => columns.map((column) => String(order[column.key]).replace(/;/g, ',')))];
@@ -53,6 +61,8 @@ function AnotherPage() {
         };
     }, [days, channels]);
 
+    const evolution = Number(days) > 90 ? 'Chiffre d\'affaires par mois' : 'Chiffre d\'affaires par jour';
+
     return (
         <div className="sales-page">
             <div className="page-head">
@@ -78,22 +88,38 @@ function AnotherPage() {
                         <Kpi value={value} current={current} previous={previous} />
                     </CrGridItem>
                 ))}
-                <CrGridItem id="evolution" label={Number(days) > 90 ? 'Chiffre d\'affaires par mois' : 'Chiffre d\'affaires par jour'} x={0} y={2} w={8} h={5} minW={4} minH={3}>
-                    <Columns items={data.timeline} label="Chiffre d'affaires" />
+                <CrGridItem id="evolution" label={evolution} x={0} y={2} w={8} h={5} minW={4} minH={3}>
+                    <CrChart
+                        label={evolution}
+                        hideLabel
+                        type={data.timeline.length > 31 ? 'area' : 'column'}
+                        labels={data.timeline.map((point) => point.label)}
+                        series={[{ name: 'Chiffre d\'affaires', values: data.timeline.map((point) => point.value) }]}
+                        format={EUROS}
+                        style={FILL}
+                    />
                 </CrGridItem>
                 <CrGridItem id="categories" label="Ventes par catégorie" x={8} y={2} w={4} h={5} minW={3}>
-                    <Bars items={data.categories} />
+                    <Ranking label="Ventes par catégorie" items={data.categories} />
                 </CrGridItem>
                 <CrGridItem id="produits" label="Top 10 produits" x={0} y={7} w={4} h={6} minW={3}>
-                    <Bars items={data.products} />
+                    <Ranking label="Top 10 produits" items={data.products} />
                 </CrGridItem>
                 <CrGridItem id="villes" label="Ventes par ville" x={4} y={7} w={4} h={6} minW={3}>
-                    <Bars items={data.cities} limit={12} />
+                    <Ranking label="Ventes par ville" items={data.cities} limit={12} />
                 </CrGridItem>
-                <CrGridItem id="canaux" label="Ventes par canal" x={8} y={7} w={4} h={3} minW={3}>
-                    <Bars items={data.channels} />
+                <CrGridItem id="canaux" label="Ventes par canal" x={8} y={7} w={4} h={5} minW={3} minH={4}>
+                    <CrChart
+                        label="Ventes par canal"
+                        hideLabel
+                        type="donut"
+                        labels={data.channels.map((item) => item.label)}
+                        series={[{ name: 'Chiffre d\'affaires', values: data.channels.map((item) => item.value) }]}
+                        format={EUROS}
+                        style={FILL}
+                    />
                 </CrGridItem>
-                <CrGridItem id="flux" label="Dernières commandes" x={8} y={10} w={4} h={6} minW={3}>
+                <CrGridItem id="flux" label="Dernières commandes" x={8} y={12} w={4} h={6} minW={3}>
                     <Feed orders={data.current.slice(0, 15)} />
                 </CrGridItem>
                 <CrGridItem id="commandes-table" label="Toutes les commandes" x={0} y={13} w={8} h={9} minW={6} minH={4}>

@@ -4,6 +4,11 @@
     --display: 'Sora', 'Inter', system-ui, sans-serif;
 }
 
+/* Thème sombre (bascule de la barre du haut) : le fond de page passe juste sous la surface des cartes. */
+:root[data-theme='dark'] {
+    --page: #0b1020;
+}
+
 body {
     margin: 0;
     font-family: 'Inter', system-ui, sans-serif;

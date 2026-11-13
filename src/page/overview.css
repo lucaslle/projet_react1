@@ -58,7 +58,7 @@
 .hero-sync {
     padding: var(--cr-spacing-xl);
     color: var(--cr-color-text);
-    background: rgb(255 255 255 / 0.92);
+    background: color-mix(in oklab, var(--cr-color-surface) 92%, transparent);
     border-radius: 20px;
     box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.6);
 }
