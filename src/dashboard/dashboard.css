@@ -20,8 +20,8 @@
     font-weight: 600;
 }
 
-.kpi-change.up { color: #15803d; }
-.kpi-change.down { color: #b91c1c; }
+.kpi-change.up { color: var(--cr-color-success); }
+.kpi-change.down { color: var(--cr-color-danger); }
 
 .feed {
     list-style: none;

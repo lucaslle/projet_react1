@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useLayoutEffect, useState } from 'react';
+import { useColorMode } from '@chakra-ui/react';
 
 const KEY = 'cristal-app-settings';
 
@@ -11,7 +12,9 @@ export const COLORS = [
     ['Encre', '#111827'],
 ];
 
-const defaults = { color: COLORS[0][1], lowStock: 5, compact: false, notifications: true, sounds: false, displayName: 'Lucas', status: 'online', emails: ['achats@cristal.shop'] };
+const systemTheme = () => (window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+const defaults = { theme: systemTheme(), color: COLORS[0][1], lowStock: 5, compact: false, notifications: true, sounds: false, displayName: 'Lucas', status: 'online', emails: ['achats@cristal.shop'] };
 
 const load = () => {
     try {
@@ -21,20 +24,26 @@ const load = () => {
     }
 };
 
+/** Chakra (anciens composants) écrit aussi data-theme sur <html> : il suit le thème des réglages au lieu du sien. */
+export const colorModeManager = { type: 'localStorage', ssr: false, get: () => load().theme, set: () => {} };
+
 const SettingsContext = createContext(null);
 
 /** Réglages de l'application, gardés dans le navigateur ; la couleur repeint tous les composants Cristal. */
 export function SettingsProvider({ children }) {
     const [settings, setSettings] = useState(load);
+    const { setColorMode } = useColorMode();
 
-    useEffect(() => {
+    // Avant l'affichage : pas d'éclair clair au chargement en thème sombre.
+    useLayoutEffect(() => {
         document.documentElement.style.setProperty('--cr-color-primary', settings.color);
+        setColorMode(settings.theme);
         try {
             localStorage.setItem(KEY, JSON.stringify(settings));
         } catch {
             // Stockage indisponible (navigation privée) : les réglages valent pour la session.
         }
-    }, [settings]);
+    }, [settings, setColorMode]);
 
     const update = (patch) => setSettings((current) => ({ ...current, ...patch }));
     const reset = () => setSettings(defaults);

@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-d
 import theme from './theme';
 import { AppShell } from './layout/appShell';
 import { ProductsProvider } from './layout/products';
-import { SettingsProvider } from './layout/settings';
+import { SettingsProvider, colorModeManager } from './layout/settings';
 import { ToastProvider } from './layout/toasts';
 import OverviewPage from './page/overview';
 import SalesPage from './page/another';
@@ -16,7 +16,7 @@ import NotFoundPage from './page/notFound';
 
 function App() {
     return (
-        <ChakraProvider theme={theme}>
+        <ChakraProvider theme={theme} colorModeManager={colorModeManager}>
             <SettingsProvider>
                 <ToastProvider>
                     <ProductsProvider>
