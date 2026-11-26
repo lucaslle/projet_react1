@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { CrButton, CrDialog, CrMenu } from "@cristal/react";
+import { CrButton, CrDialog, CrMenu } from "@cristal-ui/react";
 
 function ProductActions({ product, animation, onView, onEdit, onDelete }) {
     const [confirming, setConfirming] = useState(false);

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { CrAvatar, CrBadge, CrBreadcrumb, CrButton, CrIconButton, CrPopover, CrSearch, CrSegmented, CrSwitch, CrThemeToggle, CrTooltip } from '@cristal/react';
+import { CrAvatar, CrBadge, CrBreadcrumb, CrButton, CrIconButton, CrPopover, CrSearch, CrSegmented, CrSwitch, CrThemeToggle, CrTooltip } from '@cristal-ui/react';
 import { Command, Menu } from 'lucide-react';
 import { pageOf } from './nav';
 import { useProducts } from './products';

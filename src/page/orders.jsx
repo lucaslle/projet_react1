@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useTransition } from 'react';
-import { CrBadge, CrButton, CrDatePicker, CrEmptyState, CrLoader, CrPagination, CrSearch, CrSegmented, CrTable } from '@cristal/react';
+import { CrBadge, CrButton, CrDatePicker, CrEmptyState, CrLoader, CrPagination, CrSearch, CrSegmented, CrTable } from '@cristal-ui/react';
 import { ORDERS } from '../dashboard/fakeData';
 import { euros } from '../dashboard/charts';
 import { OrderDrawer } from './orderDrawer';

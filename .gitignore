@@ -130,4 +130,3 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-!vendor/cristal/*.tgz

@@ -1,5 +1,5 @@
 import React from 'react';
-import { CrBadge, CrSkeleton, CrSparkline } from '@cristal/react';
+import { CrBadge, CrSkeleton, CrSparkline } from '@cristal-ui/react';
 import { euros } from '../dashboard/charts';
 import { sum } from '../dashboard/fakeData';
 

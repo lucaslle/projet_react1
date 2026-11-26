@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CrDrawer } from '@cristal/react';
+import { CrDrawer } from '@cristal-ui/react';
 import { Sidebar } from './sidebar';
 import { Topbar } from './topbar';
 import { CommandMenu } from './commandMenu';

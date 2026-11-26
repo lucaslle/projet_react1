@@ -1,5 +1,5 @@
 import React, {useRef} from "react";
-import {CrButton, CrDialog, CrInput} from "@cristal/react";
+import {CrButton, CrDialog, CrInput} from "@cristal-ui/react";
 
 const fields = {display: 'flex', flexDirection: 'column', gap: 'var(--cr-spacing-lg)'};
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CrAccordion, CrAccordionItem, CrAvatar, CrBadge, CrButton, CrPagination, CrRating, CrSegmented, CrTabPanel, CrTable, CrTextarea } from '@cristal/react';
+import { CrAccordion, CrAccordionItem, CrAvatar, CrBadge, CrButton, CrPagination, CrRating, CrSegmented, CrTabPanel, CrTable, CrTextarea } from '@cristal-ui/react';
 import { useToast } from '../layout/toasts';
 import { euros } from '../dashboard/charts';
 

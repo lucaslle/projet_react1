@@ -1,5 +1,5 @@
 import React from "react";
-import { CrBox, CrCheckbox, CrSelect } from "@cristal/react";
+import { CrBox, CrCheckbox, CrSelect } from "@cristal-ui/react";
 
 export const PRICE_RANGES = {
     all: () => true,

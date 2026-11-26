@@ -15,7 +15,7 @@ import { ChevronUpIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import { Link } from "react-router-dom";
 import ProductActions from "./productActions";
 import { PackagePlus } from "lucide-react";
-import { CrAccordion, CrAccordionItem, CrBox, CrButton, CrDrawer, CrIconButton } from "@cristal/react";
+import { CrAccordion, CrAccordionItem, CrBox, CrButton, CrDrawer, CrIconButton } from "@cristal-ui/react";
 
 const ProductsTable = ({ products, handleEdit, handleDelete, handleReorder, menuAnimation, compact }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();

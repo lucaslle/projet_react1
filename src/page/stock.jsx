@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { CrButton, CrEmptyState, CrIconButton, CrSearch, CrSegmented, CrSkeleton } from "@cristal/react";
+import { CrButton, CrEmptyState, CrIconButton, CrSearch, CrSegmented, CrSkeleton } from "@cristal-ui/react";
 import { RefreshCw } from "lucide-react";
 import ModalObj from "../component/modal";
 import BoutonAdd from "../component/boutonAdd";

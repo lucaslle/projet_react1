@@ -1,5 +1,5 @@
 import React, { createContext, useCallback, useContext, useState } from 'react';
-import { CrAlert, CrToaster } from '@cristal/react';
+import { CrAlert, CrToaster } from '@cristal-ui/react';
 
 const ToastContext = createContext(() => {});
 

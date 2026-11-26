@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CrBadge, CrButton, CrCard, CrCardInput, CrSegmented } from '@cristal/react';
+import { CrBadge, CrButton, CrCard, CrCardInput, CrSegmented } from '@cristal-ui/react';
 import { useToast } from '../../layout/toasts';
 
 const PLANS = [
