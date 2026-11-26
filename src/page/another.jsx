@@ -1,5 +1,5 @@
 import React, { useMemo, useRef, useState } from 'react';
-import { CrBox, CrButton, CrChart, CrGridLayout, CrIconButton, CrSelect, CrTable, CrGridItem } from '@cristal/react';
+import { CrBox, CrButton, CrChart, CrGridLayout, CrIconButton, CrSelect, CrTable, CrGridItem } from '@cristal-ui/react';
 import { Download } from 'lucide-react';
 import { Feed, Kpi, euros } from '../dashboard/charts';
 import { CHANNELS, ORDERS, PERIODS, groupBy, ordersOf, series, sum } from '../dashboard/fakeData';

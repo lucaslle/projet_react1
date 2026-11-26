@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box } from '@chakra-ui/react';
-import { CrInput } from '@cristal/react';
+import { CrInput } from '@cristal-ui/react';
 
 function Header({ onSearch }) {
     return (

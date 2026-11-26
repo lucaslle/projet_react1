@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CrCommandPalette } from '@cristal/react';
+import { CrCommandPalette } from '@cristal-ui/react';
 import { PAGES } from './nav';
 import { useProducts } from './products';
 import { COLORS, useSettings } from './settings';

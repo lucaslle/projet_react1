@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CrBadge, CrButton, CrDialog, CrInput, CrMenu, CrOtp, CrSwitch } from '@cristal/react';
+import { CrBadge, CrButton, CrDialog, CrInput, CrMenu, CrOtp, CrSwitch } from '@cristal-ui/react';
 import { useToast } from '../../layout/toasts';
 
 const SESSIONS = [['Chrome sur Windows', 'Lyon', 'Session actuelle'], ['Safari sur iPhone', 'Paris', 'Il y a 2 h'], ['Firefox sur Linux', 'Lille', 'Il y a 3 jours']];

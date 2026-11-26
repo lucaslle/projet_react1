@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CrButton, CrDialog, CrSegmented, CrTabPanel } from '@cristal/react';
+import { CrButton, CrDialog, CrSegmented, CrTabPanel } from '@cristal-ui/react';
 import { useSettings } from '../../layout/settings';
 import { useToast } from '../../layout/toasts';
 import { Appearance } from './appearance';

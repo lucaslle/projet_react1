@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { CrBadge, CrButton, CrEmptyState, CrImage, CrRating, CrSkeleton, CrSparkline, CrTooltip } from '@cristal/react';
+import { CrBadge, CrButton, CrEmptyState, CrImage, CrRating, CrSkeleton, CrSparkline, CrTooltip } from '@cristal-ui/react';
 import { PackagePlus, Pencil } from 'lucide-react';
 import { useProducts } from '../layout/products';
 import { useSettings } from '../layout/settings';

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { CrBox, CrButton, CrCardInput, CrDialog, CrInput, CrOtp, CrStep, CrStepper, CrTagInput, CrTextarea } from "@cristal/react";
+import { CrBox, CrButton, CrCardInput, CrDialog, CrInput, CrOtp, CrStep, CrStepper, CrTagInput, CrTextarea } from "@cristal-ui/react";
 
 const empty = { quantity: '10', note: '', notify: [], card: null, code: '' };
 

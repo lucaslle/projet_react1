@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { CrAvatar, CrAvatarGroup, CrBadge, CrProgress } from '@cristal/react';
+import { CrAvatar, CrAvatarGroup, CrBadge, CrProgress } from '@cristal-ui/react';
 import { PAGES } from './nav';
 import { Logo } from './logo';
 import { useProducts } from './products';

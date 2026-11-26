@@ -1,5 +1,5 @@
 import React from "react";
-import { CrGridLayout, CrTable, CrGridItem } from "@cristal/react";
+import { CrGridLayout, CrTable, CrGridItem } from "@cristal-ui/react";
 import { useSettings } from "../layout/settings";
 
 const value = { fontSize: '2rem', fontWeight: 600, margin: 0 };

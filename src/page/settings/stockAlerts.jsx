@@ -1,5 +1,5 @@
 import React from 'react';
-import { CrSlider, CrSwitch, CrTagInput } from '@cristal/react';
+import { CrSlider, CrSwitch, CrTagInput } from '@cristal-ui/react';
 import { useProducts } from '../../layout/products';
 import { useSettings } from '../../layout/settings';
 

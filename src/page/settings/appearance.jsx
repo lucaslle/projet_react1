@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CrBackground, CrSegmented, CrSwitch, CrThemeToggle } from '@cristal/react';
+import { CrBackground, CrSegmented, CrSwitch, CrThemeToggle } from '@cristal-ui/react';
 import { COLORS, useSettings } from '../../layout/settings';
 
 const BACKGROUNDS = [['aurora', 'Aurore'], ['gradient', 'Dégradé'], ['dots', 'Points'], ['grid', 'Grille']];

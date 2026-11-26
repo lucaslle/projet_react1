@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { CrEmptyState } from '@cristal/react';
+import { CrEmptyState } from '@cristal-ui/react';
 
 function NotFoundPage() {
     return (

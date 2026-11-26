@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { CrBadge, CrImage, CrProgress, CrSkeleton } from '@cristal/react';
+import { CrBadge, CrImage, CrProgress, CrSkeleton } from '@cristal-ui/react';
 import { euros } from '../dashboard/charts';
 import { imageOf, ratingOf } from '../dashboard/productStats';
 import { useSettings } from '../layout/settings';

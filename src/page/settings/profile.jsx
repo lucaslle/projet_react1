@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CrAvatar, CrDatePicker, CrFileUpload, CrInput, CrSelect, CrTextarea } from '@cristal/react';
+import { CrAvatar, CrDatePicker, CrFileUpload, CrInput, CrSelect, CrTextarea } from '@cristal-ui/react';
 import { useSettings } from '../../layout/settings';
 
 /** Profil : nom affiché partout, photo (aperçu immédiat), fuseau, date de clôture, signature des e-mails. */

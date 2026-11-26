@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { CrBackground, CrButton, CrEmptyState, CrProgressSteps } from '@cristal/react';
+import { CrBackground, CrButton, CrEmptyState, CrProgressSteps } from '@cristal-ui/react';
 import { Plus } from 'lucide-react';
 import { useProducts } from '../layout/products';
 import { useSettings } from '../layout/settings';

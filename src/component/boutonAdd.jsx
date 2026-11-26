@@ -1,5 +1,5 @@
 import {AddIcon} from "@chakra-ui/icons";
-import {CrButton} from "@cristal/react";
+import {CrButton} from "@cristal-ui/react";
 import React from "react";
 
 function BoutonAdd({ onAdd }){
